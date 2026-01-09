@@ -449,11 +449,14 @@ CREATE OR REPLACE FUNCTION generate_case_number()
 RETURNS TRIGGER AS $$
 BEGIN
     IF NEW.case_number IS NULL THEN
-        NEW.case_number := 'CASE-' || TO_CHAR(NOW(), 'YYYYMMDD') || '-' || LPAD(NEW.id::TEXT, 6, '0');
+        -- Use a sequence-based approach for consistent case numbers
+        NEW.case_number := 'CASE-' || TO_CHAR(NOW(), 'YYYYMMDD') || '-' || LPAD(nextval('cases_id_seq')::TEXT, 6, '0');
     END IF;
     RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
 
+-- Note: This trigger runs BEFORE INSERT, so we use the sequence to generate a unique number
+-- The actual id will be assigned after this trigger completes
 CREATE TRIGGER set_case_number BEFORE INSERT ON public.cases
     FOR EACH ROW EXECUTE FUNCTION generate_case_number();

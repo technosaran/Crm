@@ -20,6 +20,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
 import { Modal } from '@/components/shared/Modal';
 import { useLeads } from '@/hooks/useLeads';
+import { validateName, validateEmail, validatePhone, sanitizeString } from '@/lib/validation';
 
 const initialLeads: any[] = [];
 
@@ -266,10 +267,7 @@ function LeadForm({ onCancel, onSuccess }: { onCancel: () => void, onSuccess: (d
         setErrors({});
         setIsSubmitting(true);
 
-        // Import validation functions
-        const { validateName, validateEmail, validatePhone, sanitizeString } = await import('@/lib/validation');
-
-        // Validate fields
+        // Validate fields using imported functions
         const newErrors: Record<string, string> = {};
 
         const firstNameValidation = validateName(formData.first_name);

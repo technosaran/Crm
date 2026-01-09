@@ -51,8 +51,7 @@ export function useContacts() {
                 .from('contacts')
                 .insert([{
                     ...contact,
-                    owner_id: user?.id,
-                    created_at: new Date().toISOString()
+                    owner_id: user?.id
                 }])
                 .select()
                 .single();

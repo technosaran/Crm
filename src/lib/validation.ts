@@ -183,7 +183,9 @@ export function validatePassword(password: string): { valid: boolean; error?: st
     return { valid: true, strength };
 }
 
-// Rate limiting check (simple in-memory implementation)
+// Rate limiting check - Simple in-memory implementation for development
+// WARNING: This is a basic implementation for development/single-instance use only.
+// For production with multiple server instances, use Redis or a database-backed solution.
 const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
 
 export function checkRateLimit(
@@ -213,9 +215,10 @@ export function checkRateLimit(
     return { allowed: true };
 }
 
-// Clean up old rate limit entries periodically
+// Clean up old rate limit entries periodically (development only)
+// In production, use Redis with TTL or database with scheduled cleanup
 if (typeof window === 'undefined') {
-    setInterval(() => {
+    const cleanupInterval = setInterval(() => {
         const now = Date.now();
         for (const [key, value] of rateLimitMap.entries()) {
             if (now > value.resetTime) {
@@ -223,4 +226,9 @@ if (typeof window === 'undefined') {
             }
         }
     }, 60000); // Clean up every minute
+    
+    // Allow cleanup to be cleared if needed
+    if (cleanupInterval.unref) {
+        cleanupInterval.unref();
+    }
 }
