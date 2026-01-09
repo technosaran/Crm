@@ -24,8 +24,8 @@ export function StatCards() {
             trend: '0%',
             isPositive: true,
             icon: DollarSign,
-            color: 'text-[#0176D3]',
-            bg: 'bg-blue-50',
+            color: 'text-indigo-600',
+            bg: 'bg-indigo-50',
             description: 'Awaiting data sync...'
         },
         {
@@ -34,8 +34,8 @@ export function StatCards() {
             trend: '0',
             isPositive: true,
             icon: Target,
-            color: 'text-[#54698d]',
-            bg: 'bg-slate-50',
+            color: 'text-violet-600',
+            bg: 'bg-violet-50',
             description: 'No active deals'
         },
         {
@@ -44,8 +44,8 @@ export function StatCards() {
             trend: '0%',
             isPositive: true,
             icon: Users,
-            color: 'text-[#f2672a]',
-            bg: 'bg-orange-50',
+            color: 'text-fuchsia-600',
+            bg: 'bg-fuchsia-50',
             description: 'List views empty'
         },
         {
@@ -54,7 +54,7 @@ export function StatCards() {
             trend: '0%',
             isPositive: true,
             icon: Zap,
-            color: 'text-[#2E844A]',
+            color: 'text-emerald-600',
             bg: 'bg-emerald-50',
             description: 'No service cases'
         }
@@ -65,39 +65,40 @@ export function StatCards() {
             {stats.map((stat, idx) => (
                 <motion.div
                     key={idx}
-                    initial={{ opacity: 0, y: 15 }}
+                    initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: idx * 0.1 }}
-                    className="group sf-card p-6 relative overflow-hidden"
+                    transition={{ delay: idx * 0.1, type: "spring", stiffness: 100 }}
+                    className="group glass-card p-6 relative overflow-hidden"
                 >
-                    <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-transparent to-sf-blue/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+                    <div className="absolute -right-4 -top-4 w-24 h-24 bg-gradient-to-br from-indigo-500/10 to-violet-500/10 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-700" />
 
-                    <div className="relative flex items-center justify-between mb-4">
-                        <div className={cn("p-2 rounded-lg shadow-sm transition-transform group-hover:scale-110", stat.bg, stat.color)}>
-                            <stat.icon size={20} />
+                    <div className="relative flex items-center justify-between mb-6">
+                        <div className={cn("p-3 rounded-xl transition-all duration-300 group-hover:scale-110 shadow-sm", stat.bg, stat.color)}>
+                            <stat.icon size={22} className="stroke-[2.5]" />
                         </div>
-                        <div className="flex items-center gap-1">
+                        <div className="flex items-center gap-2">
                             <span className={cn(
-                                "text-[11px] font-bold px-1.5 py-0.5 rounded flex items-center gap-0.5",
-                                "bg-slate-50 text-slate-400"
+                                "text-[11px] font-bold px-2 py-1 rounded-full flex items-center gap-1",
+                                "bg-emerald-50 text-emerald-600"
                             )}>
-                                {stat.trend}
+                                <TrendingUp size={10} /> {stat.trend}
                             </span>
-                            <button className="p-1 hover:bg-sf-gray rounded text-slate-300 opacity-0 group-hover:opacity-100 transition-opacity">
-                                <MoreHorizontal size={14} />
-                            </button>
                         </div>
                     </div>
 
                     <div className="relative">
-                        <p className="text-[11px] font-bold text-slate-500 uppercase tracking-widest leading-none mb-2">{stat.label}</p>
+                        <p className="text-[12px] font-bold text-slate-400 font-outfit uppercase tracking-wider mb-2">{stat.label}</p>
                         <div className="flex items-end justify-between">
-                            <h3 className="text-[22px] font-bold text-slate-800 tracking-tight">
+                            <h3 className="text-3xl font-bold text-slate-800 tracking-tight">
                                 {typeof stat.value === 'number' ? formatCurrency(stat.value, currency, locale) : stat.value}
                             </h3>
-                            <ArrowUpRight size={14} className="text-slate-300 opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0 transition-all" />
+                            <button className="p-1.5 rounded-full hover:bg-slate-100 text-slate-300 hover:text-indigo-600 transition-colors opacity-0 group-hover:opacity-100">
+                                <ArrowUpRight size={16} />
+                            </button>
                         </div>
-                        <p className="text-[11px] text-slate-400 mt-2 font-medium">{stat.description}</p>
+                        <p className="text-[12px] text-slate-400 mt-3 font-medium flex items-center gap-1">
+                            {stat.description}
+                        </p>
                     </div>
                 </motion.div>
             ))}

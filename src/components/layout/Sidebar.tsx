@@ -12,15 +12,28 @@ import {
     Settings,
     ChevronLeft,
     ChevronRight,
-    ShieldCheck
+    ShieldCheck,
+    Contact,
+    MessageSquare,
+    Calendar,
+    FileText,
+    CheckSquare,
+    Files
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const menuItems = [
     { icon: LayoutDashboard, label: 'Dashboard', href: '/' },
     { icon: Users, label: 'Leads', href: '/leads' },
     { icon: Target, label: 'Opportunities', href: '/opportunities' },
     { icon: Briefcase, label: 'Accounts', href: '/accounts' },
+    { icon: Contact, label: 'Contacts', href: '/contacts' },
+    { icon: MessageSquare, label: 'Cases', href: '/cases' },
+    { icon: Calendar, label: 'Calendar', href: '/calendar' },
+    { icon: FileText, label: 'Reports', href: '/reports' },
+    { icon: CheckSquare, label: 'Tasks', href: '/tasks' },
+    { icon: Files, label: 'Files', href: '/files' },
     { icon: BarChart3, label: 'Analytics', href: '/analytics' },
     { icon: Settings, label: 'Settings', href: '/settings' },
 ];
@@ -32,18 +45,25 @@ export function Sidebar() {
     return (
         <aside
             className={cn(
-                "relative h-screen border-r border-border bg-card transition-all duration-300 ease-in-out z-20",
-                collapsed ? "w-20" : "w-64"
+                "sticky top-0 h-screen border-r border-white/20 bg-white/70 backdrop-blur-xl transition-all duration-300 ease-in-out z-20 shadow-2xl shadow-indigo-500/5 flex flex-col overflow-hidden",
+                collapsed ? "w-24" : "w-72"
             )}
         >
-            <div className="flex h-16 items-center px-6">
-                <Link href="/" className="flex items-center gap-2 font-bold text-xl text-primary">
-                    <ShieldCheck className="h-8 w-8" />
-                    {!collapsed && <span className="tracking-tight">Zenith CRM</span>}
+            <div className="flex h-20 items-center px-8">
+                <Link href="/" className="flex items-center gap-3 group">
+                    <div className="relative">
+                        <ShieldCheck className="h-9 w-9 text-indigo-600 transition-transform group-hover:scale-110" />
+                        <div className="absolute inset-0 bg-indigo-500/20 blur-lg rounded-full animate-pulse" />
+                    </div>
+                    {!collapsed && (
+                        <span className="font-outfit font-bold text-2xl tracking-tight bg-gradient-to-r from-indigo-600 to-violet-600 bg-clip-text text-transparent">
+                            Zenith
+                        </span>
+                    )}
                 </Link>
             </div>
 
-            <nav className="space-y-1 px-3 py-4">
+            <nav className="flex-1 space-y-2 px-4 py-6 overflow-y-auto scrollbar-none">
                 {menuItems.map((item) => {
                     const isActive = pathname === item.href;
                     return (
@@ -51,13 +71,23 @@ export function Sidebar() {
                             key={item.href}
                             href={item.href}
                             className={cn(
-                                "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-all hover:bg-accent hover:text-accent-foreground",
-                                isActive ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20" : "text-muted-foreground",
+                                "flex items-center gap-4 rounded-xl px-4 py-3.5 text-sm font-medium transition-all duration-200 group relative overflow-hidden shrink-0",
+                                isActive
+                                    ? "text-white shadow-lg shadow-indigo-500/25"
+                                    : "text-slate-500 hover:text-indigo-600 hover:bg-indigo-50",
                                 collapsed && "justify-center px-0"
                             )}
                         >
-                            <item.icon className="h-5 w-5 shrink-0" />
-                            {!collapsed && <span>{item.label}</span>}
+                            {isActive && (
+                                <motion.div
+                                    layoutId="sidebar-active"
+                                    className="absolute inset-0 bg-gradient-to-r from-indigo-600 to-violet-600 z-0"
+                                    initial={false}
+                                    transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                                />
+                            )}
+                            <item.icon className={cn("h-5 w-5 shrink-0 relative z-10", isActive ? "text-white" : "group-hover:scale-110 transition-transform")} />
+                            {!collapsed && <span className="relative z-10 font-outfit tracking-wide">{item.label}</span>}
                         </Link>
                     );
                 })}
@@ -65,20 +95,14 @@ export function Sidebar() {
 
             <button
                 onClick={() => setCollapsed(!collapsed)}
-                className="absolute -right-3 top-1/2 flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded-full border border-border bg-card text-muted-foreground shadow-sm hover:text-foreground"
+                className="absolute -right-3 top-20 flex h-6 w-6 items-center justify-center rounded-full border border-white/40 bg-white text-slate-400 shadow-lg hover:text-indigo-600 hover:scale-110 transition-all"
             >
                 {collapsed ? <ChevronRight size={14} /> : <ChevronLeft size={14} />}
             </button>
 
-            <div className="absolute bottom-4 left-0 w-full px-4">
+            <div className="p-4 mt-auto text-center shrink-0">
                 {!collapsed && (
-                    <div className="rounded-xl bg-gradient-to-br from-primary/10 to-transparent p-4 border border-primary/10">
-                        <p className="text-xs font-semibold text-primary uppercase mb-1">Trial Version</p>
-                        <p className="text-xs text-muted-foreground mb-3">Upgrade for unlimited leads.</p>
-                        <button className="w-full rounded-md bg-primary py-1.5 text-xs font-medium text-primary-foreground hover:bg-primary/90 transition-colors">
-                            Go Pro
-                        </button>
-                    </div>
+                    <p className="text-[10px] text-slate-400 font-medium">v1.2.0 • Internal Build</p>
                 )}
             </div>
         </aside>

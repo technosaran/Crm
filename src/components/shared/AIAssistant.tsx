@@ -8,7 +8,8 @@ import {
     Zap,
     Search,
     Send,
-    Bot
+    Bot,
+    MoreHorizontal
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -18,117 +19,140 @@ export function AIAssistant() {
 
     return (
         <>
-            {/* Floating Trigger Button (Zoho Zia Style) */}
+            {/* Floating Trigger Button */}
             <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => setIsOpen(true)}
-                className="fixed bottom-6 right-6 z-[100] h-14 w-14 bg-gradient-to-br from-[#00A1E0] to-[#0176D3] rounded-full shadow-2xl flex items-center justify-center text-white border-2 border-white/20 hover:shadow-sf-blue/40 transition-shadow"
+                className="fixed bottom-8 right-8 z-[100] h-16 w-16 bg-gradient-to-br from-indigo-500 to-violet-600 rounded-2xl shadow-2xl shadow-indigo-500/30 flex items-center justify-center text-white border border-white/20 hover:shadow-indigo-500/50 transition-all group"
             >
-                <Sparkles size={24} className="animate-pulse" />
-                <span className="absolute -top-1 -right-1 h-4 w-4 bg-red-500 rounded-full border-2 border-white" />
+                <div className="absolute inset-0 bg-white/20 rounded-2xl blur-lg opacity-0 group-hover:opacity-100 transition-opacity" />
+                <Sparkles size={28} className="relative z-10" />
+                <span className="absolute -top-1 -right-1 h-4 w-4 bg-emerald-500 rounded-full border-2 border-white animate-pulse" />
             </motion.button>
 
             {/* AI Sidebar Panel */}
             <AnimatePresence>
                 {isOpen && (
-                    <motion.div
-                        initial={{ x: 400, opacity: 0 }}
-                        animate={{ x: 0, opacity: 1 }}
-                        exit={{ x: 400, opacity: 0 }}
-                        className="fixed top-0 right-0 bottom-0 w-[380px] bg-white z-[110] shadow-[-20px_0_50px_rgba(0,0,0,0.1)] border-l border-sf-border flex flex-col"
-                    >
-                        {/* Header */}
-                        <div className="p-4 border-b border-sf-border bg-[#001639] text-white flex items-center justify-between">
-                            <div className="flex items-center gap-2">
-                                <div className="h-8 w-8 bg-sf-blue rounded-lg flex items-center justify-center shadow-lg">
-                                    <Bot size={20} />
+                    <>
+                        {/* Backdrop */}
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            onClick={() => setIsOpen(false)}
+                            className="fixed inset-0 bg-slate-900/20 backdrop-blur-sm z-[105]"
+                        />
+
+                        <motion.div
+                            initial={{ x: 400, opacity: 0 }}
+                            animate={{ x: 0, opacity: 1 }}
+                            exit={{ x: 400, opacity: 0 }}
+                            transition={{ type: "spring", damping: 25, stiffness: 200 }}
+                            className="fixed top-4 right-4 bottom-4 w-[400px] bg-white/90 backdrop-blur-2xl z-[110] shadow-2xl rounded-3xl border border-white/40 flex flex-col overflow-hidden"
+                        >
+                            {/* Header */}
+                            <div className="p-6 border-b border-indigo-100 bg-gradient-to-r from-indigo-50/50 to-white flex items-center justify-between">
+                                <div className="flex items-center gap-3">
+                                    <div className="h-10 w-10 bg-gradient-to-br from-indigo-500 to-violet-500 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-500/20 text-white">
+                                        <Bot size={22} />
+                                    </div>
+                                    <div>
+                                        <h3 className="font-bold text-base text-slate-800 leading-tight font-outfit">Zenith Intelligence</h3>
+                                        <p className="text-[10px] text-indigo-500 font-bold uppercase tracking-wider">Online • ZI-1 Model</p>
+                                    </div>
                                 </div>
-                                <div>
-                                    <h3 className="font-bold text-[15px] leading-tight">Zenith Intelligence</h3>
-                                    <p className="text-[10px] text-blue-200 uppercase tracking-widest font-bold">Powered by ZI-1</p>
+                                <div className="flex gap-2">
+                                    <button className="p-2 hover:bg-white rounded-xl transition-colors text-slate-400 hover:text-indigo-600">
+                                        <MoreHorizontal size={20} />
+                                    </button>
+                                    <button onClick={() => setIsOpen(false)} className="p-2 hover:bg-white rounded-xl transition-colors text-slate-400 hover:text-red-500">
+                                        <X size={20} />
+                                    </button>
                                 </div>
                             </div>
-                            <button onClick={() => setIsOpen(false)} className="p-1 hover:bg-white/10 rounded-md transition-colors">
-                                <X size={20} />
-                            </button>
-                        </div>
 
-                        {/* Tabs */}
-                        <div className="flex border-b border-sf-border">
-                            <button
-                                onClick={() => setActiveTab('insights')}
-                                className={cn(
-                                    "flex-1 py-3 text-[12px] font-bold transition-all border-b-2",
-                                    activeTab === 'insights' ? "border-sf-blue text-sf-blue" : "border-transparent text-slate-500 hover:text-slate-700"
-                                )}
-                            >
-                                Smarter Insights
-                            </button>
-                            <button
-                                onClick={() => setActiveTab('chat')}
-                                className={cn(
-                                    "flex-1 py-3 text-[12px] font-bold transition-all border-b-2",
-                                    activeTab === 'chat' ? "border-sf-blue text-sf-blue" : "border-transparent text-slate-500 hover:text-slate-700"
-                                )}
-                            >
-                                Ask ZI
-                            </button>
-                        </div>
+                            {/* Tabs */}
+                            <div className="flex p-2 gap-2 bg-slate-50/50">
+                                <button
+                                    onClick={() => setActiveTab('insights')}
+                                    className={cn(
+                                        "flex-1 py-2.5 text-xs font-bold transition-all rounded-lg",
+                                        activeTab === 'insights' ? "bg-white text-indigo-600 shadow-sm" : "text-slate-500 hover:bg-white/50"
+                                    )}
+                                >
+                                    Smarter Insights
+                                </button>
+                                <button
+                                    onClick={() => setActiveTab('chat')}
+                                    className={cn(
+                                        "flex-1 py-2.5 text-xs font-bold transition-all rounded-lg",
+                                        activeTab === 'chat' ? "bg-white text-indigo-600 shadow-sm" : "text-slate-500 hover:bg-white/50"
+                                    )}
+                                >
+                                    Ask ZI
+                                </button>
+                            </div>
 
-                        {/* Content */}
-                        <div className="flex-1 overflow-y-auto p-4 space-y-6">
-                            {activeTab === 'insights' ? (
-                                <>
-                                    <div className="flex flex-col items-center justify-center text-center space-y-4 py-8 opacity-60">
-                                        <div className="h-12 w-12 bg-sf-gray rounded-full flex items-center justify-center text-slate-300">
-                                            <Zap size={24} />
-                                        </div>
-                                        <div className="max-w-[200px]">
-                                            <h4 className="text-[13px] font-bold text-slate-800">Pending Analysis</h4>
-                                            <p className="text-[11px] text-slate-500 mt-1">
-                                                ZI is analyzing your data patterns. Insights will appear here once sufficient activity is recorded.
-                                            </p>
-                                        </div>
-                                    </div>
-
-                                    <div className="space-y-4 pt-4 border-t border-sf-border">
-                                        <h4 className="text-[11px] font-bold text-slate-400 uppercase tracking-widest">Active Filters</h4>
-                                        <p className="text-[11px] text-slate-400 italic">No filters applied</p>
-                                    </div>
-                                </>
-                            ) : (
-                                <div className="h-full flex flex-col justify-end gap-4 pb-4">
-                                    <div className="space-y-4 overflow-y-auto pr-2">
-                                        <div className="flex gap-3">
-                                            <div className="h-8 w-8 rounded-full bg-sf-blue/10 flex items-center justify-center text-sf-blue shrink-0">
-                                                <Bot size={16} />
+                            {/* Content */}
+                            <div className="flex-1 overflow-y-auto p-6 space-y-6 bg-slate-50/30">
+                                {activeTab === 'insights' ? (
+                                    <>
+                                        <div className="flex flex-col items-center justify-center text-center space-y-4 py-12">
+                                            <div className="relative">
+                                                <div className="absolute inset-0 bg-indigo-500 blur-2xl opacity-10 rounded-full" />
+                                                <div className="h-16 w-16 bg-white rounded-2xl flex items-center justify-center text-indigo-500 shadow-xl border border-white/50 relative z-10">
+                                                    <Zap size={32} />
+                                                </div>
                                             </div>
-                                            <div className="bg-sf-gray/50 rounded-2xl rounded-tl-none p-3 text-[13px] text-slate-700">
-                                                Hello Alex! I can help you search records, analyze pipeline, or create new items. What's on your mind?
+                                            <div className="max-w-[240px]">
+                                                <h4 className="text-sm font-bold text-slate-800 font-outfit">Analyzing Patterns</h4>
+                                                <p className="text-xs text-slate-500 mt-2 leading-relaxed">
+                                                    ZI is currently processing your data stream. Real-time predictive insights will appear here shortly.
+                                                </p>
                                             </div>
                                         </div>
-                                    </div>
 
-                                    <div className="relative">
-                                        <input
-                                            placeholder="Ask ZI to find a lead or create a task..."
-                                            className="w-full bg-sf-gray border border-sf-border rounded-xl px-4 py-3 pr-12 text-[13px] focus:bg-white focus:border-sf-blue outline-none transition-all"
-                                        />
-                                        <button className="absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8 bg-sf-blue text-white rounded-lg flex items-center justify-center shadow-lg hover:bg-blue-700 transition-colors">
-                                            <Send size={14} />
-                                        </button>
-                                    </div>
-                                </div>
-                            )}
-                        </div>
+                                        <div className="space-y-4 pt-6 border-t border-indigo-50">
+                                            <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest pl-1">Suggested Actions</h4>
+                                            <div className="space-y-2">
+                                                {['Review Q3 Pipeline Anomalies', 'Optimize Lead Scoring Model', 'Generate Sales Forecast'].map((action, i) => (
+                                                    <button key={i} className="w-full text-left p-3 bg-white border border-slate-100 rounded-xl text-xs font-medium text-slate-600 hover:border-indigo-200 hover:text-indigo-600 hover:shadow-md transition-all flex items-center justify-between group">
+                                                        {action}
+                                                        <Sparkles size={12} className="opacity-0 group-hover:opacity-100 text-indigo-500 transition-opacity" />
+                                                    </button>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    </>
+                                ) : (
+                                    <div className="h-full flex flex-col justify-end gap-6">
+                                        <div className="space-y-6 overflow-y-auto pr-1">
+                                            <div className="flex gap-4">
+                                                <div className="h-8 w-8 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 shrink-0 mt-1">
+                                                    <Bot size={16} />
+                                                </div>
+                                                <div className="bg-white p-4 rounded-2xl rounded-tl-sm text-sm text-slate-700 shadow-sm border border-slate-100 leading-relaxed">
+                                                    <p>Hello Alex! I'm ZI, your intelligent CRM assistant.</p>
+                                                    <p className="mt-2 text-slate-500 text-xs">I can help you create records, analyze trends, or draft emails. Try asking me to "Show high-value leads".</p>
+                                                </div>
+                                            </div>
+                                        </div>
 
-                        {/* Footer */}
-                        <div className="p-4 border-t border-sf-border bg-sf-gray/20 flex items-center gap-2">
-                            <Search size={14} className="text-slate-400" />
-                            <span className="text-[11px] text-slate-500 font-medium">Try "Find open deals over $50k"</span>
-                        </div>
-                    </motion.div>
+                                        <div className="relative group">
+                                            <input
+                                                placeholder="Ask ZI anything..."
+                                                className="w-full bg-white border border-slate-200 rounded-2xl px-5 py-4 pr-14 text-sm focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/5 outline-none transition-all shadow-sm placeholder:text-slate-400"
+                                            />
+                                            <button className="absolute right-2 top-1/2 -translate-y-1/2 h-10 w-10 bg-indigo-600 text-white rounded-xl flex items-center justify-center shadow-lg shadow-indigo-500/20 hover:bg-indigo-700 hover:scale-105 transition-all">
+                                                <Send size={16} />
+                                            </button>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                        </motion.div>
+                    </>
                 )}
             </AnimatePresence>
         </>

@@ -19,14 +19,17 @@ import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
 import { Modal } from '@/components/shared/Modal';
+import { useLeads } from '@/hooks/useLeads';
 
 const initialLeads: any[] = [];
 
 export function LeadTable() {
     const [selectedIds, setSelectedIds] = useState<number[]>([]);
     const [showFilters, setShowFilters] = useState(false);
-    const [leads, setLeads] = useState(initialLeads);
     const [isModalOpen, setIsModalOpen] = useState(false);
+
+    // Use Supabase Hook
+    const { leads, loading, createLead, deleteLeads } = useLeads();
 
     const toggleSelect = (id: number) => {
         setSelectedIds(prev =>
@@ -39,11 +42,9 @@ export function LeadTable() {
         setSelectedIds(selectedIds.length === leads.length ? [] : leads.map(l => l.id));
     };
 
-    const handleDelete = () => {
-        const count = selectedIds.length;
-        setLeads(leads.filter(l => !selectedIds.includes(l.id)));
+    const handleDelete = async () => {
+        await deleteLeads(selectedIds);
         setSelectedIds([]);
-        toast.error(`${count} leads deleted permanently.`);
     };
 
     return (
@@ -133,7 +134,9 @@ export function LeadTable() {
                                                 <input type="checkbox" className="rounded" checked={selectedIds.includes(lead.id)} onChange={() => toggleSelect(lead.id)} />
                                             </td>
                                             <td className="p-3 flex items-center gap-3">
-                                                <span className="font-bold text-sf-blue hover:underline transition-all cursor-pointer truncate max-w-[150px]">{lead.name}</span>
+                                                <span className="font-bold text-sf-blue hover:underline transition-all cursor-pointer truncate max-w-[150px]">
+                                                    {lead.first_name} {lead.last_name}
+                                                </span>
                                                 <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                                                     <button className="p-1 hover:bg-white rounded border border-sf-border/50 text-slate-400"><Mail size={12} /></button>
                                                     <button className="p-1 hover:bg-white rounded border border-sf-border/50 text-slate-400"><Phone size={12} /></button>
@@ -153,9 +156,9 @@ export function LeadTable() {
                                             <td className="p-3">
                                                 <div className="flex items-center gap-2">
                                                     <div className="h-6 w-6 rounded-full bg-sf-gray flex items-center justify-center text-[10px] font-bold text-slate-500 ring-1 ring-sf-border">
-                                                        {lead.owner.split(' ').map((n: string) => n[0]).join('')}
+                                                        {(lead.first_name || 'U')[0]}
                                                     </div>
-                                                    <span className="text-[12px] font-medium text-slate-600">{lead.owner}</span>
+                                                    <span className="text-[12px] font-medium text-slate-600">Unassigned</span>
                                                 </div>
                                             </td>
                                             <td className="p-3 text-slate-500 font-medium">{lead.source}</td>
@@ -234,30 +237,81 @@ export function LeadTable() {
                 onClose={() => setIsModalOpen(false)}
                 title="Create New Lead"
             >
-                <div className="grid grid-cols-2 gap-x-8 gap-y-6">
-                    <div className="space-y-4">
-                        <h4 className="text-[14px] font-bold text-slate-900 border-b border-sf-border pb-2">Lead Information</h4>
-                        <InputField label="First Name" placeholder="e.g. Tony" />
-                        <InputField label="Last Name" placeholder="e.g. Stark" required />
-                        <InputField label="Company" placeholder="e.g. Stark Industries" required />
-                    </div>
-                    <div className="space-y-4">
-                        <h4 className="text-[14px] font-bold text-slate-900 border-b border-sf-border pb-2">Contact Details</h4>
-                        <InputField label="Email" type="email" placeholder="tony@stark.com" />
-                        <InputField label="Phone" placeholder="+1 (555) 000-0000" />
-                        <div className="space-y-1.5">
-                            <label className="text-[12px] font-bold text-slate-500 uppercase tracking-widest">Lead Source</label>
-                            <select className="w-full bg-white border border-sf-border rounded h-9 px-3 text-[13px] outline-none hover:border-slate-400 focus:border-sf-blue transition-all">
-                                <option>Web</option>
-                                <option>Referral</option>
-                                <option>LinkedIn</option>
-                                <option>Cold Outreach</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
+                <LeadForm
+                    onCancel={() => setIsModalOpen(false)}
+                    onSuccess={(lead) => {
+                        createLead(lead);
+                        setIsModalOpen(false);
+                    }}
+                />
             </Modal>
         </div>
+    );
+}
+
+function LeadForm({ onCancel, onSuccess }: { onCancel: () => void, onSuccess: (data: any) => void }) {
+    const [formData, setFormData] = useState({
+        first_name: '',
+        last_name: '',
+        company: '',
+        email: '',
+        phone: '',
+        source: 'Web'
+    });
+
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        onSuccess(formData);
+    };
+
+    return (
+        <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-x-8 gap-y-6">
+            <div className="space-y-4">
+                <h4 className="text-[14px] font-bold text-slate-900 border-b border-sf-border pb-2">Lead Information</h4>
+                <div className="space-y-1.5">
+                    <label className="text-[12px] font-bold text-slate-500 uppercase tracking-widest">First Name</label>
+                    <input className="w-full bg-white border border-sf-border rounded h-9 px-3 text-[13px] outline-none focus:border-sf-blue transition-all"
+                        value={formData.first_name} onChange={e => setFormData({ ...formData, first_name: e.target.value })} />
+                </div>
+                <div className="space-y-1.5">
+                    <label className="text-[12px] font-bold text-slate-500 uppercase tracking-widest">Last Name <span className="text-red-500">*</span></label>
+                    <input className="w-full bg-white border border-sf-border rounded h-9 px-3 text-[13px] outline-none focus:border-sf-blue transition-all" required
+                        value={formData.last_name} onChange={e => setFormData({ ...formData, last_name: e.target.value })} />
+                </div>
+                <div className="space-y-1.5">
+                    <label className="text-[12px] font-bold text-slate-500 uppercase tracking-widest">Company <span className="text-red-500">*</span></label>
+                    <input className="w-full bg-white border border-sf-border rounded h-9 px-3 text-[13px] outline-none focus:border-sf-blue transition-all" required
+                        value={formData.company} onChange={e => setFormData({ ...formData, company: e.target.value })} />
+                </div>
+            </div>
+            <div className="space-y-4">
+                <h4 className="text-[14px] font-bold text-slate-900 border-b border-sf-border pb-2">Contact Details</h4>
+                <div className="space-y-1.5">
+                    <label className="text-[12px] font-bold text-slate-500 uppercase tracking-widest">Email</label>
+                    <input type="email" className="w-full bg-white border border-sf-border rounded h-9 px-3 text-[13px] outline-none focus:border-sf-blue transition-all"
+                        value={formData.email} onChange={e => setFormData({ ...formData, email: e.target.value })} />
+                </div>
+                <div className="space-y-1.5">
+                    <label className="text-[12px] font-bold text-slate-500 uppercase tracking-widest">Phone</label>
+                    <input className="w-full bg-white border border-sf-border rounded h-9 px-3 text-[13px] outline-none focus:border-sf-blue transition-all"
+                        value={formData.phone} onChange={e => setFormData({ ...formData, phone: e.target.value })} />
+                </div>
+                <div className="space-y-1.5">
+                    <label className="text-[12px] font-bold text-slate-500 uppercase tracking-widest">Lead Source</label>
+                    <select className="w-full bg-white border border-sf-border rounded h-9 px-3 text-[13px] outline-none focus:border-sf-blue transition-all"
+                        value={formData.source} onChange={e => setFormData({ ...formData, source: e.target.value })}>
+                        <option>Web</option>
+                        <option>Referral</option>
+                        <option>LinkedIn</option>
+                        <option>Cold Outreach</option>
+                    </select>
+                </div>
+            </div>
+            <div className="col-span-2 flex justify-end gap-2 pt-4 border-t border-sf-border">
+                <button type="button" onClick={onCancel} className="sf-btn-neutral">Cancel</button>
+                <button type="submit" className="sf-btn-primary">Save Lead</button>
+            </div>
+        </form>
     );
 }
 

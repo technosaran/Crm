@@ -1,84 +1,69 @@
 @import "tailwindcss";
 
 @theme {
-  --color-sf-blue: #0176D3;
-  --color-sf-blue-dark: #014486;
-  --color-sf-gray: #F3F3F2;
-  --color-sf-border: #DDDBDA;
-  --color-sf-success: #2E844A;
-  --color-sf-error: #BA0517;
-  --color-card: #FFFFFF;
-  --color-border: #DDDBDA;
+  --color-zenith-primary: #6366f1; /* Indigo 500 */
+  --color-zenith-primary-dark: #4f46e5; /* Indigo 600 */
+  --color-zenith-secondary: #8b5cf6; /* Violet 500 */
+  --color-zenith-bg: #f8fafc; /* Slate 50 */
+  --color-zenith-card: #ffffff;
+  --color-zenith-border: #e2e8f0; /* Slate 200 */
+  --color-zenith-text: #1e293b; /* Slate 800 */
+  --color-zenith-text-light: #64748b; /* Slate 500 */
+  
   --font-outfit: var(--font-outfit);
   --font-inter: var(--font-inter);
 }
 
 @layer base {
   body {
-    @apply bg-sf-gray text-slate-800 font-inter antialiased;
-    font-size: 13px;
+    @apply bg-zenith-bg text-zenith-text font-inter antialiased;
+    font-size: 14px;
+    background-image: 
+      radial-gradient(circle at 15% 50%, rgba(99, 102, 241, 0.05), transparent 25%), 
+      radial-gradient(circle at 85% 30%, rgba(139, 92, 246, 0.05), transparent 25%);
   }
 }
 
 @layer components {
-
-  /* Salesforce Premium Button Styles */
-  .sf-btn-primary {
-    @apply bg-sf-blue text-white px-4 py-1.5 rounded-[4px] font-bold text-[13px] hover:bg-sf-blue-dark transition-all shadow-sm active:scale-[0.98] disabled:opacity-50;
+  /* Premium Glass Effect */
+  .glass-panel {
+    @apply bg-white/80 backdrop-blur-xl border border-white/40 shadow-xl shadow-indigo-500/5;
   }
 
-  .sf-btn-neutral {
-    @apply bg-white border border-sf-border text-sf-blue px-4 py-1.5 rounded-[4px] font-bold text-[13px] hover:bg-sf-gray transition-all active:scale-[0.98] disabled:opacity-50;
+  .glass-card {
+    @apply bg-white border border-zenith-border/60 rounded-xl shadow-sm hover:shadow-lg hover:shadow-indigo-500/10 transition-all duration-300;
   }
 
-  /* Premium Card Styles */
-  .sf-card {
-    @apply bg-white border border-sf-border rounded-[4px] shadow-sm hover:shadow-md transition-shadow;
+  /* Premium Buttons */
+  .btn-primary {
+    @apply bg-gradient-to-r from-zenith-primary to-zenith-secondary text-white px-5 py-2 rounded-lg font-bold text-sm hover:shadow-lg hover:shadow-indigo-500/25 transition-all active:scale-[0.98] disabled:opacity-50;
   }
 
-  .sf-header-card {
-    @apply bg-white border border-sf-border rounded-[4px] p-4 shadow-sm relative overflow-hidden;
+  .btn-neutral {
+    @apply bg-white border border-zenith-border text-zenith-text-light px-5 py-2 rounded-lg font-bold text-sm hover:bg-slate-50 hover:text-zenith-primary transition-all active:scale-[0.98] disabled:opacity-50;
   }
 }
 
 /* Premium Scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  @apply bg-sf-gray;
+  @apply bg-transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-slate-300 rounded-full border-2 border-sf-gray hover:bg-slate-400 transition-colors;
+  @apply bg-slate-200 rounded-full hover:bg-slate-300 transition-colors;
 }
 
-/* Loading Shimmer */
-@keyframes shimmer {
-  0% {
-    transform: translateX(-100%);
-  }
-
-  100% {
-    transform: translateX(100%);
-  }
+/* Animations */
+@keyframes glow {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
 }
 
-.animate-shimmer {
-  position: relative;
-  overflow: hidden;
-}
-
-.animate-shimmer::after {
-  content: '';
-  @apply absolute inset-0;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
-  animation: shimmer 1.5s infinite;
-}
-
-/* Glassmorphism utility */
-.glass {
-  @apply bg-white/70 backdrop-blur-md border border-white/20;
+.animate-glow {
+  animation: glow 3s ease-in-out infinite;
 }

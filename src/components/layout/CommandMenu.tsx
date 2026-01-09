@@ -46,26 +46,26 @@ export function CommandMenu() {
             open={open}
             onOpenChange={setOpen}
             label="Global Search"
-            className="fixed inset-0 z-[200] flex items-start justify-center pt-[20vh] bg-slate-900/50 backdrop-blur-sm"
+            className="fixed inset-0 z-[200] flex items-start justify-center pt-[20vh] bg-slate-900/60 backdrop-blur-sm"
         >
-            <div className="w-full max-w-[640px] bg-white border border-sf-border rounded-xl shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200">
-                <div className="flex items-center border-b border-sf-border px-4 h-12">
-                    <Search className="mr-2 h-4 w-4 shrink-0 text-slate-400" />
+            <div className="w-full max-w-[640px] bg-white/95 backdrop-blur-xl border border-white/20 rounded-2xl shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200 ring-1 ring-black/5">
+                <div className="flex items-center border-b border-slate-100 px-6 h-14 bg-gradient-to-r from-indigo-50/50 to-transparent">
+                    <Search className="mr-3 h-5 w-5 shrink-0 text-indigo-500" />
                     <Command.Input
                         placeholder="Search records, apps, or commands..."
-                        className="flex-1 bg-transparent py-3 text-sm outline-none placeholder:text-slate-400"
+                        className="flex-1 bg-transparent py-4 text-base outline-none placeholder:text-slate-400 text-slate-700 font-medium"
                     />
-                    <kbd className="hidden sm:inline-flex h-5 select-none items-center gap-1 rounded border bg-slate-100 px-1.5 font-mono text-[10px] font-medium text-slate-500">
+                    <kbd className="hidden sm:inline-flex h-6 select-none items-center gap-1 rounded-md border border-slate-200 bg-white px-2 font-mono text-[11px] font-bold text-slate-500 shadow-sm">
                         ESC
                     </kbd>
                 </div>
 
-                <Command.List className="max-h-[400px] overflow-y-auto p-2 scroll-smooth">
-                    <Command.Empty className="py-6 text-center text-sm text-slate-500">
+                <Command.List className="max-h-[420px] overflow-y-auto p-3 scroll-smooth">
+                    <Command.Empty className="py-8 text-center text-sm text-slate-500 font-medium">
                         No results found.
                     </Command.Empty>
 
-                    <Command.Group heading="Recent Records" className="px-2 py-1.5 text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+                    <Command.Group heading="Recent Records" className="px-2 py-2 text-[11px] font-bold text-indigo-400 uppercase tracking-wider">
                         <CommandItem icon={User} onSelect={() => runCommand(() => router.push('/leads'))}>
                             John Peterson <span className="ml-2 font-normal text-slate-400">— Lead</span>
                         </CommandItem>
@@ -77,9 +77,9 @@ export function CommandMenu() {
                         </CommandItem>
                     </Command.Group>
 
-                    <Command.Separator className="h-px bg-sf-border mx-2 my-2" />
+                    <div className="h-px bg-slate-100 mx-2 my-2" />
 
-                    <Command.Group heading="Navigation" className="px-2 py-1.5 text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+                    <Command.Group heading="Navigation" className="px-2 py-2 text-[11px] font-bold text-indigo-400 uppercase tracking-wider">
                         <CommandItem icon={History} onSelect={() => runCommand(() => router.push('/'))}>
                             Go to Home Page
                         </CommandItem>
@@ -103,10 +103,10 @@ export function CommandMenu() {
                         </CommandItem>
                     </Command.Group>
 
-                    <Command.Separator className="h-px bg-sf-border mx-2 my-2" />
+                    <div className="h-px bg-slate-100 mx-2 my-2" />
 
-                    <Command.Group heading="Quick Actions" className="px-2 py-1.5 text-[11px] font-bold text-slate-400 uppercase tracking-wider">
-                        <CommandItem icon={Plus} className="text-sf-blue font-semibold">
+                    <Command.Group heading="Quick Actions" className="px-2 py-2 text-[11px] font-bold text-indigo-400 uppercase tracking-wider">
+                        <CommandItem icon={Plus} className="text-indigo-600 font-semibold bg-indigo-50/50">
                             Create New Lead...
                         </CommandItem>
                         <CommandItem icon={FileText}>
@@ -118,12 +118,12 @@ export function CommandMenu() {
                     </Command.Group>
                 </Command.List>
 
-                <div className="flex items-center justify-between border-t border-sf-border bg-slate-50 px-4 py-2 text-[10px] text-slate-500">
+                <div className="flex items-center justify-between border-t border-slate-100 bg-slate-50 px-4 py-2.5 text-[11px] text-slate-500 font-medium">
                     <div className="flex items-center gap-4">
-                        <span><kbd className="bg-white border rounded px-1 mr-1">Enter</kbd> to select</span>
-                        <span><kbd className="bg-white border rounded px-1 mr-1">↑↓</kbd> to navigate</span>
+                        <span className="flex items-center gap-1"><kbd className="bg-white border border-slate-200 rounded px-1.5 shadow-sm">Enter</kbd> to select</span>
+                        <span className="flex items-center gap-1"><kbd className="bg-white border border-slate-200 rounded px-1.5 shadow-sm">↑↓</kbd> to navigate</span>
                     </div>
-                    <span className="font-semibold text-sf-blue">Zenith Command v1.0</span>
+                    <span className="font-bold text-indigo-500 font-outfit tracking-wide">Zenith Command v2.0</span>
                 </div>
             </div>
         </Command.Dialog>
@@ -145,11 +145,11 @@ function CommandItem({
         <Command.Item
             onSelect={onSelect}
             className={cn(
-                "flex cursor-default select-none items-center rounded-md px-2 py-2 text-sm outline-none aria-selected:bg-sf-blue aria-selected:text-white transition-all gap-3",
+                "flex cursor-default select-none items-center rounded-lg px-3 py-3 text-sm outline-none aria-selected:bg-gradient-to-r aria-selected:from-indigo-500 aria-selected:to-violet-500 aria-selected:text-white aria-selected:shadow-md transition-all gap-3 group mb-1",
                 className
             )}
         >
-            <Icon className="h-4 w-4 shrink-0" />
+            <Icon className="h-4 w-4 shrink-0 group-aria-selected:text-white text-slate-400 transition-colors" />
             {children}
         </Command.Item>
     );

@@ -1,37 +1,50 @@
 "use client";
 
-import { useGlobalStore } from '@/store/useGlobalStore';
-import { UserRole } from '@/types/crm';
-
-// Define granular permissions
-type Permission =
-    | 'DELETE_LEAD'
-    | 'VIEW_REPORTS'
-    | 'MANAGE_USERS'
-    | 'EDIT_SETTINGS'
-    | 'EXPORT_DATA';
-
-const ROLE_PERMISSIONS: Record<UserRole, Permission[]> = {
-    ADMIN: ['DELETE_LEAD', 'VIEW_REPORTS', 'MANAGE_USERS', 'EDIT_SETTINGS', 'EXPORT_DATA'],
-    MANAGER: ['VIEW_REPORTS', 'EXPORT_DATA'],
-    SALES: [],
-    SUPPORT: [],
-};
+import { useEffect, useState } from 'react';
+import { createClient } from '@/lib/supabase';
+import { User } from '@supabase/supabase-js';
 
 export function useAuth() {
-    // For demo: default role is ADMIN to allow everything
-    // In production, this would come from a JWT/Auth session
-    const user = {
-        id: 'u1',
-        name: 'Alex Rivera',
-        role: 'ADMIN' as UserRole,
+    const [user, setUser] = useState<User | null>(null);
+    const [loading, setLoading] = useState(true);
+    const supabase = createClient();
+
+    useEffect(() => {
+        // Get initial session
+        const getSession = async () => {
+            try {
+                const { data: { session } } = await supabase.auth.getSession();
+                setUser(session?.user ?? null);
+            } catch (error) {
+                console.error("Auth session error:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        getSession();
+
+        // Listen for changes
+        const { data: { subscription } } = supabase.auth.onAuthStateChange(
+            async (_event, session) => {
+                setUser(session?.user ?? null);
+                setLoading(false);
+            }
+        );
+
+        return () => subscription.unsubscribe();
+    }, []);
+
+    const signOut = async () => {
+        await supabase.auth.signOut();
     };
 
-    const hasPermission = (permission: Permission) => {
-        return ROLE_PERMISSIONS[user.role].includes(permission);
+    return {
+        user: user ? { ...user, name: user.user_metadata?.full_name || user.email, role: 'ADMIN' } : { name: 'Guest', role: 'GUEST' }, // Temp fallback for UI compatibility
+        loading,
+        isAuthenticated: !!user,
+        signOut,
+        isAdmin: true, // simplified for now
+        hasPermission: () => true // simplified for now
     };
-
-    const isAdmin = user.role === 'ADMIN';
-
-    return { user, hasPermission, isAdmin };
 }

@@ -1,10 +1,15 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Outfit } from "next/font/google"; // Import Outfit
 import "./globals.css";
 import { Shell } from "@/components/layout/Shell";
 
 const inter = Inter({
   variable: "--font-inter",
+  subsets: ["latin"],
+});
+
+const outfit = Outfit({
+  variable: "--font-outfit",
   subsets: ["latin"],
 });
 
@@ -21,7 +26,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${inter.variable} antialiased bg-sf-gray text-foreground`}
+        className={`${inter.variable} ${outfit.variable} antialiased bg-zenith-bg text-zenith-text`}
       >
         <Shell>{children}</Shell>
       </body>
