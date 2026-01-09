@@ -11,7 +11,10 @@ import {
     Plus,
     History,
     FileText,
-    MessageSquare
+    MessageSquare,
+    LifeBuoy,
+    Calendar,
+    BarChart4
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { cn } from '@/lib/utils';
@@ -82,6 +85,15 @@ export function CommandMenu() {
                         </CommandItem>
                         <CommandItem icon={User} onSelect={() => runCommand(() => router.push('/contacts'))}>
                             Manage Contacts
+                        </CommandItem>
+                        <CommandItem icon={LifeBuoy} onSelect={() => runCommand(() => router.push('/cases'))}>
+                            Manage Cases
+                        </CommandItem>
+                        <CommandItem icon={Calendar} onSelect={() => runCommand(() => router.push('/calendar'))}>
+                            View Calendar
+                        </CommandItem>
+                        <CommandItem icon={BarChart4} onSelect={() => runCommand(() => router.push('/reports'))}>
+                            View Reports
                         </CommandItem>
                         <CommandItem icon={FileText} onSelect={() => runCommand(() => router.push('/tasks'))}>
                             View My Tasks
