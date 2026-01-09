@@ -12,9 +12,10 @@ import Link from 'next/link';
 const STAGES: { id: OpportunityStage; label: string; color: string }[] = [
     { id: 'NEW', label: 'Discovery', color: 'bg-blue-500' },
     { id: 'QUALIFICATION', label: 'Qualification', color: 'bg-indigo-500' },
+    { id: 'NEEDS_ANALYSIS', label: 'Needs Analysis', color: 'bg-cyan-500' },
+    { id: 'VALUE_PROPOSITION', label: 'Value Proposition', color: 'bg-teal-500' },
     { id: 'PROPOSAL', label: 'Proposal', color: 'bg-amber-500' },
     { id: 'NEGOTIATION', label: 'Negotiation', color: 'bg-purple-500' },
-    { id: 'CONTRACT', label: 'Contract', color: 'bg-pink-500' },
     { id: 'CLOSED_WON', label: 'Won', color: 'bg-emerald-500' },
 ];
 
