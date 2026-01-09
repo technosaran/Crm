@@ -1,26 +1,84 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  --color-sf-blue: #0176D3;
+  --color-sf-blue-dark: #014486;
+  --color-sf-gray: #F3F3F2;
+  --color-sf-border: #DDDBDA;
+  --color-sf-success: #2E844A;
+  --color-sf-error: #BA0517;
+  --color-card: #FFFFFF;
+  --color-border: #DDDBDA;
+  --font-outfit: var(--font-outfit);
+  --font-inter: var(--font-inter);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  body {
+    @apply bg-sf-gray text-slate-800 font-inter antialiased;
+    font-size: 13px;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer components {
+
+  /* Salesforce Premium Button Styles */
+  .sf-btn-primary {
+    @apply bg-sf-blue text-white px-4 py-1.5 rounded-[4px] font-bold text-[13px] hover:bg-sf-blue-dark transition-all shadow-sm active:scale-[0.98] disabled:opacity-50;
+  }
+
+  .sf-btn-neutral {
+    @apply bg-white border border-sf-border text-sf-blue px-4 py-1.5 rounded-[4px] font-bold text-[13px] hover:bg-sf-gray transition-all active:scale-[0.98] disabled:opacity-50;
+  }
+
+  /* Premium Card Styles */
+  .sf-card {
+    @apply bg-white border border-sf-border rounded-[4px] shadow-sm hover:shadow-md transition-shadow;
+  }
+
+  .sf-header-card {
+    @apply bg-white border border-sf-border rounded-[4px] p-4 shadow-sm relative overflow-hidden;
+  }
+}
+
+/* Premium Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-sf-gray;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-slate-300 rounded-full border-2 border-sf-gray hover:bg-slate-400 transition-colors;
+}
+
+/* Loading Shimmer */
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.animate-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+
+.animate-shimmer::after {
+  content: '';
+  @apply absolute inset-0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  animation: shimmer 1.5s infinite;
+}
+
+/* Glassmorphism utility */
+.glass {
+  @apply bg-white/70 backdrop-blur-md border border-white/20;
 }
