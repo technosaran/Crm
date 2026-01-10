@@ -25,7 +25,7 @@ import { useGlobalStore } from "@/store/useGlobalStore";
 export default function OpportunitiesPage() {
     const { opportunities, loading, createOpportunity, updateOpportunity, updateStage, refresh } = useOpportunities();
     const { currency, locale } = useGlobalStore();
-    
+
     const [viewMode, setViewMode] = useState<'kanban' | 'list'>('kanban');
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingOpportunity, setEditingOpportunity] = useState<typeof opportunities[0] | null>(null);
@@ -39,13 +39,13 @@ export default function OpportunitiesPage() {
         const totalPipeline = open.reduce((sum, o) => sum + (o.amount || 0), 0);
         const totalWon = won.reduce((sum, o) => sum + (o.amount || 0), 0);
         const weightedPipeline = open.reduce((sum, o) => sum + ((o.amount || 0) * (o.probability || 0) / 100), 0);
-        return { 
-            count: opportunities.length, 
+        return {
+            count: opportunities.length,
             openCount: open.length,
             wonCount: won.length,
-            totalPipeline, 
+            totalPipeline,
             totalWon,
-            weightedPipeline 
+            weightedPipeline
         };
     }, [opportunities]);
 
@@ -53,7 +53,7 @@ export default function OpportunitiesPage() {
     const filteredOpportunities = useMemo(() => {
         if (!searchQuery.trim()) return opportunities;
         const query = searchQuery.toLowerCase();
-        return opportunities.filter(o => 
+        return opportunities.filter(o =>
             (o.name || '').toLowerCase().includes(query) ||
             o.account_name?.toLowerCase().includes(query)
         );
@@ -162,7 +162,14 @@ export default function OpportunitiesPage() {
                                 className="bg-sf-gray border border-sf-border pl-10 pr-4 py-1.5 rounded h-8 text-sm focus:bg-white focus:border-sf-blue outline-none w-full sm:w-64 transition-all"
                             />
                         </div>
-                        <button className="p-1 px-2 border border-sf-border rounded-[4px] hover:bg-white text-slate-500">
+                        <button
+                            className="p-1 px-2 border border-sf-border rounded-[4px] hover:bg-white text-slate-500"
+                            onClick={() => {
+                                import('@/lib/export').then(({ exportToCSV }) => {
+                                    exportToCSV(opportunities, 'zenith_pipeline_export');
+                                });
+                            }}
+                        >
                             <Download size={14} />
                         </button>
                     </div>

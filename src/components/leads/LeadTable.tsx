@@ -13,24 +13,25 @@ import {
     Tag,
     Download,
     Mail,
-    Phone
+    Phone,
+    TrendingUp
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
 import { Modal } from '@/components/shared/Modal';
-import { useLeads } from '@/hooks/useLeads';
+import { useLeads, Lead } from '@/hooks/useLeads';
 import { validateName, validateEmail, validatePhone, sanitizeString } from '@/lib/validation';
-
-const initialLeads: any[] = [];
+import { ConvertLeadModal } from './ConvertLeadModal';
 
 export function LeadTable() {
     const [selectedIds, setSelectedIds] = useState<string[]>([]);
     const [showFilters, setShowFilters] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [conversionLead, setConversionLead] = useState<Lead | null>(null);
 
     // Use Supabase Hook
-    const { leads, loading, createLead, deleteLeads } = useLeads();
+    const { leads, loading, createLead, deleteLeads, convertLead, refresh } = useLeads();
 
     const toggleSelect = (id: string) => {
         setSelectedIds(prev =>
@@ -46,6 +47,10 @@ export function LeadTable() {
     const handleDelete = async () => {
         await deleteLeads(selectedIds);
         setSelectedIds([]);
+    };
+
+    const handleConvertAction = (lead: Lead) => {
+        setConversionLead(lead);
     };
 
     return (
@@ -102,22 +107,31 @@ export function LeadTable() {
                                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
                                 <input placeholder="Filter results..." className="bg-white border border-sf-border rounded-[4px] h-8 pl-9 pr-4 text-[12px] w-full sm:w-48 focus:border-sf-blue outline-none transition-all" />
                             </div>
-                            <button className="p-1 px-2 border border-sf-border rounded-[4px] hover:bg-white text-slate-500" disabled={leads.length === 0}><Download size={14} /></button>
-                            <button className="p-1 px-2 border border-sf-border rounded-[4px] hover:bg-white text-slate-500"><RefreshCw size={14} /></button>
+                            <button
+                                className="p-1 px-2 border border-sf-border rounded-[4px] hover:bg-white text-slate-500"
+                                disabled={leads.length === 0}
+                                onClick={() => {
+                                    import('@/lib/export').then(({ exportToCSV }) => {
+                                        exportToCSV(leads, 'zenith_leads_export');
+                                    });
+                                }}
+                            >
+                                <Download size={14} />
+                            </button>
+                            <button onClick={refresh} className="p-1 px-2 border border-sf-border rounded-[4px] hover:bg-white text-slate-500"><RefreshCw size={14} className={loading ? 'animate-spin' : ''} /></button>
                         </div>
                     </div>
 
                     <div className="overflow-x-auto overflow-y-auto max-h-[60vh]">
-                        <table className="w-full text-left text-[13px] border-collapse relative min-w-[800px]">
+                        <table className="w-full text-left text-[13px] border-collapse relative min-w-[1000px]">
                             <thead>
                                 <tr className="bg-white border-b border-sf-border sticky top-0 z-10">
                                     <th className="p-3 w-12 text-center pointer-events-auto">
                                         <input type="checkbox" className="rounded" checked={leads.length > 0 && selectedIds.length === leads.length} onChange={toggleAll} disabled={leads.length === 0} />
                                     </th>
-                                    {['Lead Name', 'Company', 'Status', 'Owner', 'Source', 'Email'].map(h => (
+                                    {['Lead Name', 'Company', 'Status', 'Owner', 'Source', 'Email', 'Actions'].map(h => (
                                         <th key={h} className="p-3 font-bold text-slate-600 uppercase text-[11px] tracking-wider border-r border-sf-border/30">{h}</th>
                                     ))}
-                                    <th className="p-3"></th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-sf-border/50">
@@ -135,21 +149,26 @@ export function LeadTable() {
                                                 <input type="checkbox" className="rounded" checked={selectedIds.includes(lead.id)} onChange={() => toggleSelect(lead.id)} />
                                             </td>
                                             <td className="p-3 flex items-center gap-3">
-                                                <span className="font-bold text-sf-blue hover:underline transition-all cursor-pointer truncate max-w-[150px]">
-                                                    {lead.first_name} {lead.last_name}
-                                                </span>
+                                                <div className="flex flex-col">
+                                                    <span className="font-bold text-sf-blue hover:underline transition-all cursor-pointer truncate max-w-[150px]">
+                                                        {lead.first_name} {lead.last_name}
+                                                    </span>
+                                                    <span className="text-[10px] text-slate-400 font-mono">{lead.id}</span>
+                                                </div>
                                                 <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                                                     <button className="p-1 hover:bg-white rounded border border-sf-border/50 text-slate-400"><Mail size={12} /></button>
                                                     <button className="p-1 hover:bg-white rounded border border-sf-border/50 text-slate-400"><Phone size={12} /></button>
                                                 </div>
                                             </td>
-                                            <td className="p-3 font-semibold text-slate-700">{lead.company}</td>
+                                            <td className="p-3 font-semibold text-slate-700">{lead.company_name || lead.company}</td>
                                             <td className="p-3">
                                                 <span className={cn(
                                                     "px-2.5 py-0.5 rounded-full text-[10px] font-bold border",
                                                     lead.status === 'New' ? "bg-blue-50 text-blue-600 border-blue-200" :
                                                         lead.status === 'Working' ? "bg-amber-50 text-amber-600 border-amber-200" :
-                                                            "bg-emerald-50 text-emerald-600 border-emerald-200"
+                                                            lead.status === 'Nurturing' ? "bg-purple-50 text-purple-600 border-purple-200" :
+                                                                lead.status === 'Qualified' ? "bg-emerald-50 text-emerald-600 border-emerald-200" :
+                                                                    "bg-slate-50 text-slate-600 border-slate-200"
                                                 )}>
                                                     {lead.status}
                                                 </span>
@@ -159,13 +178,23 @@ export function LeadTable() {
                                                     <div className="h-6 w-6 rounded-full bg-sf-gray flex items-center justify-center text-[10px] font-bold text-slate-500 ring-1 ring-sf-border">
                                                         {(lead.first_name || 'U')[0]}
                                                     </div>
-                                                    <span className="text-[12px] font-medium text-slate-600">Unassigned</span>
+                                                    <span className="text-[12px] font-medium text-slate-600">You</span>
                                                 </div>
                                             </td>
                                             <td className="p-3 text-slate-500 font-medium">{lead.source}</td>
-                                            <td className="p-3 text-sf-blue hover:underline cursor-pointer font-medium">{lead.email}</td>
-                                            <td className="p-3 text-right">
-                                                <button className="p-1 px-2 hover:bg-white rounded transition-all text-slate-400"><MoreVertical size={16} /></button>
+                                            <td className="p-3 text-sf-blue hover:underline cursor-pointer font-medium truncate max-w-[150px]">{lead.email}</td>
+                                            <td className="p-3">
+                                                <div className="flex items-center gap-2">
+                                                    {lead.status !== 'Qualified' && (
+                                                        <button
+                                                            onClick={() => handleConvertAction(lead)}
+                                                            className="flex items-center gap-1 px-3 py-1 bg-emerald-50 text-emerald-700 text-[11px] font-bold rounded-full border border-emerald-200 hover:bg-emerald-100 transition-all shadow-sm"
+                                                        >
+                                                            <TrendingUp size={12} /> Convert
+                                                        </button>
+                                                    )}
+                                                    <button className="p-1 px-2 hover:bg-white rounded transition-all text-slate-400 border border-transparent hover:border-sf-border"><MoreVertical size={16} /></button>
+                                                </div>
                                             </td>
                                         </motion.tr>
                                     ))
@@ -246,6 +275,19 @@ export function LeadTable() {
                     }}
                 />
             </Modal>
+
+            {/* Convert Lead Modal */}
+            <ConvertLeadModal
+                isOpen={!!conversionLead}
+                onClose={() => setConversionLead(null)}
+                lead={conversionLead}
+                onConvert={async (options) => {
+                    if (conversionLead) {
+                        await convertLead(conversionLead.id, options);
+                        setConversionLead(null);
+                    }
+                }}
+            />
         </div>
     );
 }
@@ -328,30 +370,30 @@ function LeadForm({ onCancel, onSuccess }: { onCancel: () => void, onSuccess: (d
                 <h4 className="text-[14px] font-bold text-slate-900 border-b border-sf-border pb-2">Lead Information</h4>
                 <div className="space-y-1.5">
                     <label className="text-[12px] font-bold text-slate-500 uppercase tracking-widest">First Name</label>
-                    <input 
+                    <input
                         className={`w-full bg-white border rounded h-9 px-3 text-[13px] outline-none focus:border-sf-blue transition-all ${errors.first_name ? 'border-red-500' : 'border-sf-border'}`}
-                        value={formData.first_name} 
-                        onChange={e => setFormData({ ...formData, first_name: e.target.value })} 
+                        value={formData.first_name}
+                        onChange={e => setFormData({ ...formData, first_name: e.target.value })}
                     />
                     {errors.first_name && <p className="text-xs text-red-600">{errors.first_name}</p>}
                 </div>
                 <div className="space-y-1.5">
                     <label className="text-[12px] font-bold text-slate-500 uppercase tracking-widest">Last Name <span className="text-red-500">*</span></label>
-                    <input 
+                    <input
                         className={`w-full bg-white border rounded h-9 px-3 text-[13px] outline-none focus:border-sf-blue transition-all ${errors.last_name ? 'border-red-500' : 'border-sf-border'}`}
                         required
-                        value={formData.last_name} 
-                        onChange={e => setFormData({ ...formData, last_name: e.target.value })} 
+                        value={formData.last_name}
+                        onChange={e => setFormData({ ...formData, last_name: e.target.value })}
                     />
                     {errors.last_name && <p className="text-xs text-red-600">{errors.last_name}</p>}
                 </div>
                 <div className="space-y-1.5">
                     <label className="text-[12px] font-bold text-slate-500 uppercase tracking-widest">Company <span className="text-red-500">*</span></label>
-                    <input 
+                    <input
                         className={`w-full bg-white border rounded h-9 px-3 text-[13px] outline-none focus:border-sf-blue transition-all ${errors.company ? 'border-red-500' : 'border-sf-border'}`}
                         required
-                        value={formData.company} 
-                        onChange={e => setFormData({ ...formData, company: e.target.value })} 
+                        value={formData.company}
+                        onChange={e => setFormData({ ...formData, company: e.target.value })}
                     />
                     {errors.company && <p className="text-xs text-red-600">{errors.company}</p>}
                 </div>
@@ -360,20 +402,20 @@ function LeadForm({ onCancel, onSuccess }: { onCancel: () => void, onSuccess: (d
                 <h4 className="text-[14px] font-bold text-slate-900 border-b border-sf-border pb-2">Contact Details</h4>
                 <div className="space-y-1.5">
                     <label className="text-[12px] font-bold text-slate-500 uppercase tracking-widest">Email</label>
-                    <input 
-                        type="email" 
+                    <input
+                        type="email"
                         className={`w-full bg-white border rounded h-9 px-3 text-[13px] outline-none focus:border-sf-blue transition-all ${errors.email ? 'border-red-500' : 'border-sf-border'}`}
-                        value={formData.email} 
-                        onChange={e => setFormData({ ...formData, email: e.target.value })} 
+                        value={formData.email}
+                        onChange={e => setFormData({ ...formData, email: e.target.value })}
                     />
                     {errors.email && <p className="text-xs text-red-600">{errors.email}</p>}
                 </div>
                 <div className="space-y-1.5">
                     <label className="text-[12px] font-bold text-slate-500 uppercase tracking-widest">Phone</label>
-                    <input 
+                    <input
                         className={`w-full bg-white border rounded h-9 px-3 text-[13px] outline-none focus:border-sf-blue transition-all ${errors.phone ? 'border-red-500' : 'border-sf-border'}`}
-                        value={formData.phone} 
-                        onChange={e => setFormData({ ...formData, phone: e.target.value })} 
+                        value={formData.phone}
+                        onChange={e => setFormData({ ...formData, phone: e.target.value })}
                     />
                     {errors.phone && <p className="text-xs text-red-600">{errors.phone}</p>}
                 </div>
