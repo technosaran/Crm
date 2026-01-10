@@ -25,14 +25,14 @@ import { validateName, validateEmail, validatePhone, sanitizeString } from '@/li
 const initialLeads: any[] = [];
 
 export function LeadTable() {
-    const [selectedIds, setSelectedIds] = useState<number[]>([]);
+    const [selectedIds, setSelectedIds] = useState<string[]>([]);
     const [showFilters, setShowFilters] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     // Use Supabase Hook
     const { leads, loading, createLead, deleteLeads } = useLeads();
 
-    const toggleSelect = (id: number) => {
+    const toggleSelect = (id: string) => {
         setSelectedIds(prev =>
             prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]
         );
