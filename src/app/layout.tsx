@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, Outfit } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import { Shell } from "@/components/layout/Shell";
 import { Toaster } from "sonner";
@@ -56,6 +57,7 @@ export default function RootLayout({
           {children}
         </Shell>
         <Toaster position="top-right" richColors closeButton />
+        <Analytics />
       </body>
     </html>
   );
