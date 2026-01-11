@@ -40,7 +40,7 @@ export function Navigation({ onMenuClick }: NavigationProps) {
 
     return (
         <div className={cn(
-            "sticky top-0 z-40 flex flex-col transition-all duration-300 backdrop-blur-md bg-white/80 border-b border-white/20",
+            "sticky top-0 z-40 flex flex-col transition-all duration-300 backdrop-blur-md bg-white/80 dark:bg-slate-900/80 border-b border-slate-200 dark:border-white/10",
             scrolled ? "shadow-sm" : ""
         )}>
             {/* Salesforce Global Header - Refined for Zen mode */}
@@ -59,7 +59,7 @@ export function Navigation({ onMenuClick }: NavigationProps) {
                         <input
                             type="text"
                             placeholder="Search anything... (⌘K)"
-                            className="w-[200px] md:w-[320px] bg-slate-100/50 border border-slate-200 focus:bg-white focus:border-indigo-300 focus:ring-4 focus:ring-indigo-500/10 h-10 rounded-xl pl-10 pr-4 text-sm transition-all outline-none text-slate-700 placeholder:text-slate-400 font-medium"
+                            className="w-[200px] md:w-[320px] bg-slate-100/50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 focus:bg-white dark:focus:bg-slate-800 focus:border-indigo-300 dark:focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 h-10 rounded-xl pl-10 pr-4 text-sm transition-all outline-none text-slate-700 dark:text-slate-200 placeholder:text-slate-400 font-medium"
                         />
                     </div>
                 </div>
@@ -80,7 +80,7 @@ export function Navigation({ onMenuClick }: NavigationProps) {
                             { Icon: Settings, showOnMobile: true },
                         ].map(({ Icon, showOnMobile }, i) => (
                             <button key={i} className={cn(
-                                "p-2 text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-all relative group",
+                                "p-2 text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-slate-800 rounded-lg transition-all relative group",
                                 !showOnMobile && "hidden sm:flex"
                             )}>
                                 <Icon size={20} className="stroke-[1.5]" />

@@ -82,7 +82,7 @@ export default function CaseDetail() {
     return (
         <div className="flex flex-col gap-6 pb-12">
             {/* Context Header */}
-            <div className="bg-white border border-sf-border rounded-[4px] p-6 shadow-sm">
+            <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-[4px] p-6 shadow-sm">
                 <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
                     <div className="flex items-center gap-4">
                         <div className="bg-[#00a1e0] h-14 w-14 shadow-lg rounded-[4px] flex items-center justify-center text-white shrink-0">
@@ -104,7 +104,7 @@ export default function CaseDetail() {
                                     {caseItem.status}
                                 </span>
                             </div>
-                            <h1 className="text-2xl font-bold text-slate-900 leading-tight tracking-tight">
+                            <h1 className="text-2xl font-bold text-slate-900 dark:text-white leading-tight tracking-tight">
                                 {caseItem.subject}
                             </h1>
                             <div className="flex items-center gap-4 mt-1.5">
@@ -134,7 +134,7 @@ export default function CaseDetail() {
                 {/* Metrics Sidebar */}
                 <div className="lg:col-span-4 space-y-6">
                     {/* Urgency Matrix */}
-                    <div className="bg-white border border-sf-border rounded-[4px] p-6 shadow-sm">
+                    <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-[4px] p-6 shadow-sm">
                         <h3 className="text-[11px] font-black text-slate-400 uppercase tracking-widest mb-6 flex items-center gap-2">
                             System Priority
                         </h3>
@@ -189,9 +189,9 @@ export default function CaseDetail() {
 
                 {/* Main Interaction Area */}
                 <div className="lg:col-span-8 space-y-6">
-                    <div className="bg-white border border-sf-border rounded-[4px] shadow-sm flex flex-col min-h-[600px]">
+                    <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-[4px] shadow-sm flex flex-col min-h-[600px]">
                         {/* Tab Nav */}
-                        <div className="flex border-b border-sf-border bg-sf-gray/20 font-outfit">
+                        <div className="flex border-b border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-slate-800/30 font-outfit">
                             {tabs.map((tab) => (
                                 <button
                                     key={tab.id}

@@ -53,7 +53,7 @@ export function Sidebar({ mobileMenuOpen, setMobileMenuOpen }: SidebarProps) {
             {/* Desktop Sidebar */}
             <aside
                 className={cn(
-                    "hidden lg:flex sticky top-0 h-screen border-r border-white/20 bg-white/70 backdrop-blur-xl transition-all duration-300 ease-in-out z-20 shadow-2xl shadow-indigo-500/5 flex-col overflow-hidden",
+                    "hidden lg:flex sticky top-0 h-screen border-r border-slate-200 dark:border-white/10 bg-white/70 dark:bg-slate-900/80 backdrop-blur-xl transition-all duration-300 ease-in-out z-20 shadow-2xl shadow-indigo-500/5 flex-col overflow-hidden",
                     collapsed ? "w-24" : "w-72"
                 )}
             >
@@ -82,7 +82,7 @@ export function Sidebar({ mobileMenuOpen, setMobileMenuOpen }: SidebarProps) {
                                     "flex items-center gap-4 rounded-xl px-4 py-3.5 text-sm font-medium transition-all duration-200 group relative overflow-hidden shrink-0",
                                     isActive
                                         ? "text-white shadow-lg shadow-indigo-500/25"
-                                        : "text-slate-500 hover:text-indigo-600 hover:bg-indigo-50",
+                                        : "text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-500/10",
                                     collapsed && "justify-center px-0"
                                 )}
                             >
@@ -103,7 +103,7 @@ export function Sidebar({ mobileMenuOpen, setMobileMenuOpen }: SidebarProps) {
 
                 <button
                     onClick={() => setCollapsed(!collapsed)}
-                    className="absolute -right-3 top-20 flex h-6 w-6 items-center justify-center rounded-full border border-white/40 bg-white text-slate-400 shadow-lg hover:text-indigo-600 hover:scale-110 transition-all"
+                    className="absolute -right-3 top-20 flex h-6 w-6 items-center justify-center rounded-full border border-slate-200 dark:border-white/20 bg-white dark:bg-slate-800 text-slate-400 shadow-lg hover:text-indigo-600 hover:scale-110 transition-all"
                 >
                     {collapsed ? <ChevronRight size={14} /> : <ChevronLeft size={14} />}
                 </button>

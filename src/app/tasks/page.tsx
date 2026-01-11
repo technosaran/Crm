@@ -102,15 +102,15 @@ export default function TasksPage() {
     return (
         <div className="space-y-6 pb-12">
             {/* Header */}
-            <div className="bg-white border border-sf-border rounded-[4px] p-6 shadow-sm">
+            <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-[4px] p-6 shadow-sm">
                 <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                     <div className="flex items-center gap-3">
                         <div className="bg-[#4BC076] h-12 w-12 rounded flex items-center justify-center text-white shadow-md">
                             <CheckCircle2 size={28} />
                         </div>
                         <div>
-                            <p className="text-slate-500 text-[11px] font-bold uppercase tracking-widest mb-1">Activities</p>
-                            <h1 className="text-[24px] font-bold tracking-tight text-slate-900 leading-none">Task Management</h1>
+                            <p className="text-slate-500 dark:text-slate-400 text-[11px] font-bold uppercase tracking-widest mb-1">Activities</p>
+                            <h1 className="text-[24px] font-bold tracking-tight text-slate-900 dark:text-white leading-none">Task Management</h1>
                         </div>
                     </div>
                     <div className="flex items-center gap-2">
@@ -136,16 +136,16 @@ export default function TasksPage() {
 
             <div className="flex flex-col lg:flex-row gap-6">
                 {/* Main Content */}
-                <div className="flex-1 bg-white border border-sf-border rounded-[4px] shadow-sm overflow-hidden min-h-[500px] flex flex-col">
+                <div className="flex-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-[4px] shadow-sm overflow-hidden min-h-[500px] flex flex-col">
                     {/* Search Bar */}
-                    <div className="p-4 border-b border-sf-border bg-white flex items-center gap-4">
+                    <div className="p-4 border-b border-slate-200 dark:border-white/10 bg-white dark:bg-slate-900 flex items-center gap-4">
                         <div className="relative flex-1 max-w-md">
                             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
                             <input
                                 placeholder="Search tasks..."
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
-                                className="bg-white border border-sf-border rounded h-9 pl-10 pr-4 text-[13px] w-full focus:border-sf-blue outline-none transition-all"
+                                className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded h-9 pl-10 pr-4 text-[13px] w-full focus:border-indigo-500 outline-none transition-all text-slate-900 dark:text-slate-100"
                             />
                         </div>
                     </div>
@@ -170,8 +170,8 @@ export default function TasksPage() {
                 {/* Sidebar */}
                 <div className="w-full lg:w-80 shrink-0 space-y-6">
                     {/* Stats Card */}
-                    <div className="bg-white border border-sf-border rounded-[4px] p-5 shadow-sm">
-                        <h3 className="text-[14px] font-bold text-slate-800 mb-4 pb-2 border-b border-sf-border">
+                    <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-[4px] p-5 shadow-sm">
+                        <h3 className="text-[14px] font-bold text-slate-800 dark:text-white mb-4 pb-2 border-b border-slate-200 dark:border-white/10">
                             Task Summary
                         </h3>
                         <div className="space-y-4">
@@ -197,8 +197,8 @@ export default function TasksPage() {
                     </div>
 
                     {/* Productivity Insights */}
-                    <div className="bg-white border border-sf-border rounded-[4px] p-5 shadow-sm">
-                        <h3 className="text-[14px] font-bold text-slate-800 mb-4 pb-2 border-b border-sf-border">
+                    <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-[4px] p-5 shadow-sm">
+                        <h3 className="text-[14px] font-bold text-slate-800 dark:text-white mb-4 pb-2 border-b border-slate-200 dark:border-white/10">
                             Productivity Insights
                         </h3>
                         <div className="space-y-4">

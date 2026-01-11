@@ -1,15 +1,28 @@
 @import "tailwindcss";
 
 @theme {
-  --color-zenith-primary: #6366f1; /* Indigo 500 */
-  --color-zenith-primary-dark: #4f46e5; /* Indigo 600 */
-  --color-zenith-secondary: #8b5cf6; /* Violet 500 */
-  --color-zenith-bg: #f8fafc; /* Slate 50 */
+  --color-zenith-primary: #6366f1;
+  /* Indigo 500 */
+  --color-zenith-primary-dark: #4f46e5;
+  /* Indigo 600 */
+  --color-zenith-secondary: #8b5cf6;
+  /* Violet 500 */
+  --color-zenith-bg: #f8fafc;
+  /* Slate 50 */
   --color-zenith-card: #ffffff;
-  --color-zenith-border: #e2e8f0; /* Slate 200 */
-  --color-zenith-text: #1e293b; /* Slate 800 */
-  --color-zenith-text-light: #64748b; /* Slate 500 */
-  
+  --color-zenith-border: #e2e8f0;
+  /* Slate 200 */
+  --color-zenith-text: #1e293b;
+  /* Slate 800 */
+  --color-zenith-text-light: #64748b;
+  /* Slate 500 */
+
+  /* Legacy Salesforce compatibility tokens */
+  --color-sf-blue: #0176D3;
+  --color-sf-border: #D8DDE1;
+  --color-sf-gray: #F3F3F3;
+  --color-sf-text: #181818;
+
   --font-outfit: var(--font-outfit);
   --font-inter: var(--font-inter);
 }
@@ -18,13 +31,14 @@
   body {
     @apply bg-zenith-bg text-zenith-text font-inter antialiased;
     font-size: 14px;
-    background-image: 
-      radial-gradient(circle at 15% 50%, rgba(99, 102, 241, 0.05), transparent 25%), 
+    background-image:
+      radial-gradient(circle at 15% 50%, rgba(99, 102, 241, 0.05), transparent 25%),
       radial-gradient(circle at 85% 30%, rgba(139, 92, 246, 0.05), transparent 25%);
   }
 }
 
 @layer components {
+
   /* Premium Glass Effect */
   .glass-panel {
     @apply bg-white/80 backdrop-blur-xl border border-white/40 shadow-xl shadow-indigo-500/5;
@@ -35,17 +49,19 @@
   }
 
   /* Premium Buttons */
-  .btn-primary {
-    @apply bg-gradient-to-r from-zenith-primary to-zenith-secondary text-white px-5 py-2 rounded-lg font-bold text-sm hover:shadow-lg hover:shadow-indigo-500/25 transition-all active:scale-[0.98] disabled:opacity-50 min-h-[44px] touch-manipulation;
+  .btn-primary,
+  .sf-btn-primary {
+    @apply bg-gradient-to-r from-zenith-primary to-zenith-secondary text-white px-5 py-2 rounded-lg font-bold text-sm hover:shadow-lg hover:shadow-indigo-500/25 transition-all active:scale-[0.98] disabled:opacity-50 min-h-[40px] flex items-center justify-center;
   }
 
-  .btn-neutral {
-    @apply bg-white border border-zenith-border text-zenith-text-light px-5 py-2 rounded-lg font-bold text-sm hover:bg-slate-50 hover:text-zenith-primary transition-all active:scale-[0.98] disabled:opacity-50 min-h-[44px] touch-manipulation;
+  .btn-neutral,
+  .sf-btn-neutral {
+    @apply bg-white border border-zenith-border text-zenith-text-light px-5 py-2 rounded-lg font-bold text-sm hover:bg-slate-50 hover:text-zenith-primary transition-all active:scale-[0.98] disabled:opacity-50 min-h-[40px] flex items-center justify-center;
   }
 
-  /* Mobile-friendly tap targets */
-  button, a {
-    @apply touch-manipulation;
+  /* Salesforce Style Path Component Compat */
+  .sf-path-step {
+    @apply flex-1 flex items-center justify-center text-[12px] font-bold h-full relative transition-all cursor-pointer;
   }
 }
 
@@ -65,8 +81,15 @@
 
 /* Animations */
 @keyframes glow {
-  0%, 100% { opacity: 0.5; }
-  50% { opacity: 1; }
+
+  0%,
+  100% {
+    opacity: 0.5;
+  }
+
+  50% {
+    opacity: 1;
+  }
 }
 
 .animate-glow {

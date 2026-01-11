@@ -77,7 +77,7 @@ export const CommentSection = ({ entityType, entityId }: CommentSectionProps) =>
                                 </div>
                                 <div className="flex-1 min-w-0">
                                     <div className="flex items-center gap-2 mb-1">
-                                        <span className="text-sm font-black text-slate-900 dark:text-slate-100">{comment.user_profile?.name || 'User'}</span>
+                                        <span className="text-sm font-black text-slate-900 dark:text-slate-100">{comment.user_profile?.full_name || 'User'}</span>
                                         <span className="text-[10px] font-bold text-slate-400 uppercase tracking-tight flex items-center gap-1">
                                             <Clock size={12} />
                                             {formatDistanceToNow(new Date(comment.created_at), { addSuffix: true })}

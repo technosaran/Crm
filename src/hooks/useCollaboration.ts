@@ -10,7 +10,7 @@ export interface Comment {
     user_id: string;
     created_at: string;
     user_profile?: {
-        name: string;
+        full_name: string;
         avatar_url?: string;
     };
 }
@@ -28,7 +28,7 @@ export function useCollaboration(entityType: string, entityId: string) {
                 .select(`
           *,
           user_profile:user_profiles (
-            name,
+            full_name,
             avatar_url
           )
         `)
@@ -61,7 +61,7 @@ export function useCollaboration(entityType: string, entityId: string) {
                 .select(`
           *,
           user_profile:user_profiles (
-            name,
+            full_name,
             avatar_url
           )
         `)

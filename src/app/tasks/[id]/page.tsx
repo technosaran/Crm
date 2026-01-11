@@ -79,7 +79,7 @@ export default function TaskDetail() {
     return (
         <div className="flex flex-col gap-6 pb-12 animate-in fade-in duration-500">
             {/* Minimalist Professional Header */}
-            <div className="bg-white border border-sf-border rounded-[4px] p-6 shadow-sm">
+            <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-[4px] p-6 shadow-sm">
                 <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
                     <div className="flex items-center gap-4">
                         <button
@@ -107,7 +107,7 @@ export default function TaskDetail() {
                             </div>
                             <h1 className={cn(
                                 "text-2xl font-bold tracking-tight leading-tight",
-                                isCompleted ? "text-slate-400 line-through" : "text-slate-900"
+                                isCompleted ? "text-slate-400 line-through" : "text-slate-900 dark:text-white"
                             )}>
                                 {task.subject}
                             </h1>
@@ -134,12 +134,12 @@ export default function TaskDetail() {
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
                 {/* Details Column */}
                 <div className="lg:col-span-8 space-y-6">
-                    <div className="bg-white border border-sf-border rounded-[4px] p-6 shadow-sm min-h-[300px]">
-                        <div className="flex items-center gap-2 mb-6 border-b border-sf-border pb-4">
+                    <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-[4px] p-6 shadow-sm min-h-[300px]">
+                        <div className="flex items-center gap-2 mb-6 border-b border-slate-200 dark:border-white/10 pb-4">
                             <FileText size={16} className="text-slate-400" />
-                            <h3 className="text-sm font-bold text-slate-800">Activity Description</h3>
+                            <h3 className="text-sm font-bold text-slate-800 dark:text-white">Activity Description</h3>
                         </div>
-                        <div className="text-[14px] text-slate-600 leading-relaxed whitespace-pre-wrap">
+                        <div className="text-[14px] text-slate-600 dark:text-slate-400 leading-relaxed whitespace-pre-wrap">
                             {task.description || (
                                 <div className="flex flex-col items-center justify-center py-12 text-slate-300">
                                     <FileText size={48} className="mb-2 opacity-20" />
@@ -150,10 +150,10 @@ export default function TaskDetail() {
                     </div>
 
                     {/* Collaboration Section */}
-                    <div className="bg-white border border-sf-border rounded-[4px] shadow-sm overflow-hidden">
-                        <div className="bg-sf-gray/20 p-4 border-b border-sf-border flex items-center gap-2">
+                    <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-[4px] shadow-sm overflow-hidden">
+                        <div className="bg-slate-50 dark:bg-slate-800/50 p-4 border-b border-slate-200 dark:border-white/10 flex items-center gap-2">
                             <MessageSquare size={16} className="text-sf-blue" />
-                            <h3 className="text-sm font-bold text-slate-800 font-outfit uppercase tracking-widest text-[11px]">Chatter & Discussion</h3>
+                            <h3 className="text-sm font-bold text-slate-800 dark:text-white font-outfit uppercase tracking-widest text-[11px]">Chatter & Discussion</h3>
                         </div>
                         <div className="p-6">
                             <CommentSection entityType="TASK" entityId={task.id.toString()} />
@@ -163,7 +163,7 @@ export default function TaskDetail() {
 
                 {/* Sidebar Column */}
                 <div className="lg:col-span-4 space-y-6">
-                    <div className="bg-white border border-sf-border rounded-[4px] p-6 shadow-sm">
+                    <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-[4px] p-6 shadow-sm">
                         <h3 className="text-[11px] font-black text-slate-400 uppercase tracking-widest mb-6">Task Intelligence</h3>
                         <div className="space-y-6">
                             <div className="flex items-start gap-4">
@@ -172,7 +172,7 @@ export default function TaskDetail() {
                                 </div>
                                 <div>
                                     <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-0.5">Assigned To</p>
-                                    <p className="font-bold text-slate-800">{task.assigned_to?.full_name || 'Unassigned'}</p>
+                                    <p className="font-bold text-slate-800 dark:text-white">{task.assigned_to?.full_name || 'Unassigned'}</p>
                                 </div>
                             </div>
 
@@ -184,7 +184,7 @@ export default function TaskDetail() {
                                     <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-0.5">Due Date</p>
                                     <p className={cn(
                                         "font-bold",
-                                        task.due_date && new Date(task.due_date) < new Date() && !isCompleted ? "text-red-600" : "text-slate-800"
+                                        task.due_date && new Date(task.due_date) < new Date() && !isCompleted ? "text-red-600" : "text-slate-800 dark:text-white"
                                     )}>
                                         {task.due_date ? new Date(task.due_date).toLocaleDateString() : 'No Limit'}
                                     </p>
